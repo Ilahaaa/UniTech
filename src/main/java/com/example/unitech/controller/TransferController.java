@@ -25,6 +25,7 @@ private static final String TRANSFER="api/make-transfer";
                                                @RequestParam BigDecimal amount) {
         try {
             transferService.makeTransfer(senderAccountId, recipientAccountId, amount);
+            System.out.println("github test");
             return ResponseEntity.ok("Transfer successful");
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
