@@ -42,7 +42,18 @@ public class RateServiceImpl implements RateService {
 
     @Override
     public void updateRatesFromApi() {
-   //  calculateRate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("apikey", EXCHANGE_API_API_KEY);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        final HttpEntity<String> headersEntity = new HttpEntity<>(headers);
+        String url = getExchangeUrl(LocalDate.now(), EnumCurrency.EUR, Arrays.asList(EnumCurrency.values()));
+
+        ResponseEntity<RateResponse> responseEntity = restTemplate.exchange(url, HttpMethod.GET, headersEntity, RateResponse.class);
+
+        RateResponse rates = responseEntity.getBody();
+        RateEntity entity = convert(rates);
+        updateRatesInDatabase(entity);
     }
 
     @Override
@@ -105,5 +116,8 @@ public class RateServiceImpl implements RateService {
                 .rates(rates)
                 .build();
 
+    }
+    private void updateRatesInDatabase(RateEntity entity) {
+        rateRepository.save(entity);
     }
 }

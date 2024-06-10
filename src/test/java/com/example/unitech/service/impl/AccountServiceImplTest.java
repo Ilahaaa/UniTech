@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,4 +55,31 @@ class AccountServiceImplTest {
 
         verify(accountRepository, times(1)).findByUserAndIsActiveTrue(loggedInUser);
     }
+
+    @Test
+    void testGetActiveAccountsBalanceWhenNoActiveAccountsThenReturnEmptyList() {
+        User loggedInUser = new User();
+        List<Account> activeAccounts = Collections.emptyList();
+
+        when(accountRepository.findByUserAndIsActiveTrue(loggedInUser)).thenReturn(activeAccounts);
+
+        List<BigDecimal> balances = accountService.getActiveAccountsBalance(loggedInUser);
+
+        assertEquals(0, balances.size());
+    }
+
+    @Test
+    void testGetActiveAccountsBalanceWhenSingleActiveAccountThenReturnBalance() {
+        User loggedInUser = new User();
+        Account account = Account.builder().balance(new BigDecimal("150.00")).isActive(true).user(loggedInUser).build();
+        List<Account> activeAccounts = Collections.singletonList(account);
+
+        when(accountRepository.findByUserAndIsActiveTrue(loggedInUser)).thenReturn(activeAccounts);
+
+        List<BigDecimal> balances = accountService.getActiveAccountsBalance(loggedInUser);
+
+        assertEquals(1, balances.size());
+        assertEquals(new BigDecimal("150.00"), balances.get(0));
+    }
+    
 }
