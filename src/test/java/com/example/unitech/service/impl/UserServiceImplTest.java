@@ -44,7 +44,7 @@ class UserServiceImplTest {
     void testRegisterUser_Success() {
         when(userRepository.findByPin(anyString())).thenReturn(null);
 
-        when(roleRepository.findByName(anyString())).thenReturn(Optional.of(new Role()));
+        when(roleRepository.findByName("ADMIN")).thenReturn(Optional.of(new Role("ADMIN")));
 
         when(userRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -54,7 +54,9 @@ class UserServiceImplTest {
         userDto.setPin("123456");
         userDto.setPassword("password");
 
-        assertDoesNotThrow(() -> userService.registerUser(userDto));
+        UserDto result = assertDoesNotThrow(() -> userService.registerUser(userDto));
+        assertNotNull(result);
+        assertEquals(userDto.getPin(), result.getPin());
 
         verify(userRepository, times(1)).findByPin("123456");
 
@@ -119,4 +121,6 @@ class UserServiceImplTest {
 
         assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(pin));
     }
+
+
 }

@@ -26,7 +26,8 @@ public class AccountServiceImpl implements AccountService {
         List<Account> activeAccounts = accountRepository.findByUserAndIsActiveTrue(loggedInUser);
         return activeAccounts.stream()
                 .map(Account::getBalance)
-                .collect(Collectors.toList());    }
+                .collect(Collectors.toList());
+    }
 
 
 

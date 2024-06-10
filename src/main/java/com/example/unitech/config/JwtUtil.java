@@ -21,7 +21,7 @@ public class JwtUtil {
     private final JwtParser jwtParser;
 
     private final String TOKEN_HEADER = "Authorization";
-    private final String TOKEN_PREFIX = "Bearer ";
+    private final String TOKEN_PREFIX = "Bearer";
 
     public JwtUtil(){
         this.jwtParser = Jwts.parser().setSigningKey(secret_key);

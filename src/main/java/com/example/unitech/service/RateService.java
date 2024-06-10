@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface RateService {
-
     RateDto calculateRate(EnumCurrency base, List<EnumCurrency> targets, LocalDate date);
 
     RateDto calculateRate();
